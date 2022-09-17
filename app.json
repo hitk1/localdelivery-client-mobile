@@ -3,9 +3,33 @@
     "name": "localdelivery-client-mobile",
     "slug": "localdelivery-client-mobile",
     "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.hitk1.localdeliverymobile",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.hitk1.localdeliverymobile",
+      "versionCode": 1
+    },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
+    }
   },
   "name": "localdelivery-client-mobile"
 }
