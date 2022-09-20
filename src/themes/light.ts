@@ -41,7 +41,9 @@ const theme = createTheme({
         $sidebarBackground: pallet.navy20,
         $sidebarForeground: pallet.navy900,
         $sidebarSeparator: pallet.paper00 + '20',
-        $headerBarBackground: pallet.paper20
+        $headerBarBackground: pallet.paper20,
+        $inputEmpty: pallet.paper300,
+        $inputFilled: pallet.paper900,
     },
     borderRadii: {
         xs: 4,
