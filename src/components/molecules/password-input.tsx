@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { NativeSyntheticEvent, TextInput, TextInputChangeEventData, TextInputProps } from 'react-native'
 import {
     useRestyle,
     spacing,
@@ -8,22 +7,17 @@ import {
     SpacingProps,
     BorderProps,
     BackgroundColorProps,
-    VariantProps,
-    createRestyleComponent,
-    createVariant,
-    composeRestyleFunctions
+    composeRestyleFunctions,
 } from '@shopify/restyle'
-import Box, { BoxProps } from './box'
-import Text from './text'
+import { Box, Text } from '@/components/atoms'
+import { BoxProps } from '../atoms/box'
 import { Theme } from '@/themes'
+import { TextInput } from 'react-native-gesture-handler'
+import { TextInputProps, TouchableOpacity } from 'react-native'
 
-type InputProps = {
-    required?: boolean
-    label: string
+type PasswordInputProps = Partial<TextInputProps> & {
     name: string
-    filled?: boolean
-    disabled?: boolean
-    inputProps?: TextInputProps
+    label: string
     containerProps?: BoxProps & SpacingProps<Theme> & BorderProps<Theme> & BackgroundColorProps<Theme>
 }
 
@@ -33,22 +27,20 @@ const restyleFunctions = composeRestyleFunctions<Theme, BoxProps & SpacingProps<
     backgroundColor
 ])
 
-export default function Input({
+export default function PasswordInput({
     name,
     label,
-    required,
-    filled,
-    disabled,
     containerProps,
-    inputProps,
-    ...rest
-}: InputProps) {
+    ...restProps
+}: PasswordInputProps){
+    const props = useRestyle(restyleFunctions, {...containerProps})
     const [text, setText] = React.useState('')
     const [isFilled, setFilled] = React.useState(text !== '')
     const [isFocused, setFocused] = React.useState(false)
-    const props = useRestyle(restyleFunctions, { ...containerProps })
 
-    const handleOnChange = (rawText: string) => {
+    const [showPassword, setShowPassword] = React.useState(true)
+
+    const handleChange = (rawText: string) => {
         setText(rawText)
         setFilled(rawText !== '')
     }
@@ -57,26 +49,36 @@ export default function Input({
 
     return (
         <Box
-            width="100%"
+            width='100%'
+            {...props}
         >
-            <Text>{label} {required && '*'}</Text>
+            <Text>{label}</Text>
             <Box
                 mt='xs'
-                px="sm"
+                px='sm'
                 height={46}
                 borderWidth={1}
                 borderRadius='sm'
-                justifyContent="center"
+                alignItems="center"
+                justifyContent='space-between'
+                flexDirection='row'
                 borderColor={isFocused || isFilled ? '$inputFilled' : '$inputEmpty'}
-                {...props as any}
             >
-                <TextInput
+                <TextInput 
                     value={text}
-                    onChangeText={handleOnChange}
+                    onChangeText={handleChange}
                     onFocus={() => handleOnFocus(true)}
                     onBlur={() => handleOnFocus(false)}
-                    accessibilityRole='text'
-                    {...inputProps}
+                    accessibilityRole="text"
+                    secureTextEntry={showPassword}
+                    {...restProps}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(oldState => !oldState)}
+                    style={{
+                        height: 10,
+                        width: 10,
+                        borderWidth: 1
+                    }}
                 />
             </Box>
         </Box>

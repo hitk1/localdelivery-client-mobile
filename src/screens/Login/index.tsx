@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container, Text, TextInput} from '@/atoms'
-import { backgroundColor, spacing } from '@shopify/restyle'
+import { Container, Text} from '@/components/atoms'
+import { PasswordInput, TextInput,  } from '@/components/molecules'
 
 export default function LoginScreen(){
     return(
@@ -13,16 +13,18 @@ export default function LoginScreen(){
                 name='email'
                 label='Email'
                 inputProps={{
-                    maxLength: 10
+                    textContentType: 'emailAddress',
+                    keyboardType: 'email-address',
+                    returnKeyType: 'next'
                 }}
             />
 
-            <TextInput 
+            <PasswordInput
                 name="password"
                 label="Senha"
+                textContentType='password'
                 containerProps={{
                     mt: 'md'
-
                 }}
                 />
         </Container>
