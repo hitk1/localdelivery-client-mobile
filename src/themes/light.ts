@@ -62,12 +62,26 @@ const theme = createTheme({
         },
         sidebar: {
             color: '$sidebarForeground'
+        },
+        primaryButtonLabel: {
+            color: 'white',
+            fontWeight: 'bold'
         }
     },
     barVariants: {
         headerBar: {
             bg: '$headerBarBackground',
             borderRadius: 'hg'
+        }
+    },
+    buttonVariants: {
+        primary: {
+            bg: "$primary",
+            height: 46,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 'sm'
         }
     }
 })

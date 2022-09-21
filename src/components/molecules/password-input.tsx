@@ -1,4 +1,8 @@
 import * as React from 'react'
+import { TextInputProps, TouchableOpacity } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
+import UiEye from '@iconscout/react-native-unicons/icons/uil-eye'
+import UiEyeSlash from '@iconscout/react-native-unicons/icons/uil-eye-slash'
 import {
     useRestyle,
     spacing,
@@ -12,8 +16,6 @@ import {
 import { Box, Text } from '@/components/atoms'
 import { BoxProps } from '../atoms/box'
 import { Theme } from '@/themes'
-import { TextInput } from 'react-native-gesture-handler'
-import { TextInputProps, TouchableOpacity } from 'react-native'
 
 type PasswordInputProps = Partial<TextInputProps> & {
     name: string
@@ -32,8 +34,8 @@ export default function PasswordInput({
     label,
     containerProps,
     ...restProps
-}: PasswordInputProps){
-    const props = useRestyle(restyleFunctions, {...containerProps})
+}: PasswordInputProps) {
+    const props = useRestyle(restyleFunctions, { ...containerProps })
     const [text, setText] = React.useState('')
     const [isFilled, setFilled] = React.useState(text !== '')
     const [isFocused, setFocused] = React.useState(false)
@@ -64,22 +66,32 @@ export default function PasswordInput({
                 flexDirection='row'
                 borderColor={isFocused || isFilled ? '$inputFilled' : '$inputEmpty'}
             >
-                <TextInput 
+                <TextInput
                     value={text}
                     onChangeText={handleChange}
                     onFocus={() => handleOnFocus(true)}
                     onBlur={() => handleOnFocus(false)}
                     accessibilityRole="text"
                     secureTextEntry={showPassword}
+                    style={{
+                        width: '85%'
+                    }}
                     {...restProps}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(oldState => !oldState)}
-                    style={{
-                        height: 10,
-                        width: 10,
-                        borderWidth: 1
+                    hitSlop={{
+                        top: 3,
+                        right: 3,
+                        bottom: 3,
+                        left: 3
                     }}
-                />
+                >
+                    {
+                        showPassword
+                            ? (<UiEye size="22px" color="#000" />)
+                            : (<UiEyeSlash size="22px" color="#000" />)
+                    }
+                </TouchableOpacity>
             </Box>
         </Box>
     )

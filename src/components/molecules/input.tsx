@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { TextInput, TextInputProps } from 'react-native'
+import { useController } from 'react-hook-form'
 import {
     useRestyle,
     spacing,
@@ -40,17 +41,26 @@ export default function Input({
     inputProps,
     ...rest
 }: InputProps) {
-    const [text, setText] = React.useState('')
-    const [isFilled, setFilled] = React.useState(text !== '')
+    const {
+        field: { onChange, onBlur, value },
+        fieldState: { error }
+    } = useController({ name })
+
+    const [isFilled, setFilled] = React.useState(value !== null && value !== '')
     const [isFocused, setFocused] = React.useState(false)
     const props = useRestyle(restyleFunctions, { ...containerProps })
 
-    const handleOnChange = (rawText: string) => {
-        setText(rawText)
+    const handleOnChange = React.useCallback((rawText: string) => {
         setFilled(rawText !== '')
-    }
+        onChange(rawText)
+    }, [isFilled, onChange])
 
-    const handleOnFocus = (value: boolean) => setFocused(value)
+    const handleOnFocus = React.useCallback((value: boolean) => {
+        setFocused(value)
+
+        if (!value)
+            onBlur()
+    }, [onBlur])
 
     return (
         <Box
@@ -68,7 +78,7 @@ export default function Input({
                 borderColor={isFocused || isFilled ? '$inputFilled' : '$inputEmpty'}
             >
                 <TextInput
-                    value={text}
+                    value={value}
                     onChangeText={handleOnChange}
                     onFocus={() => handleOnFocus(true)}
                     onBlur={() => handleOnFocus(false)}
