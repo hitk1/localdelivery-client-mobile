@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 //Screens
 import Login from './Login'
+import Onboarding from './Onboarding'
+
 
 const Stack = createNativeStackNavigator()
 
@@ -14,6 +16,13 @@ export default function Screens(){
                 component={Login}
                 options={{
                     headerShown: false,
+                }}
+            />
+            <Stack.Screen 
+                name="Onboarding"
+                component={Onboarding}
+                options={{
+                    headerShown: false
                 }}
             />
         </Stack.Navigator>

@@ -62,10 +62,12 @@ const Touchable = ({
             alignItems="center"
             bg={actionType === 'primary' ? '$primary' : 'white'}
             borderRadius='sm'
+            borderWidth={1}
+            borderColor="$primary"
             {...rest}
             {...props}
         >
-            <Text variant={actionType === 'primary' ? 'primaryButtonLabel' : 'primaryButtonLabel'}>{label}</Text>
+            <Text variant={actionType === 'primary' ? 'primaryButtonLabel' : 'secondaryButtonLabel'}>{label}</Text>
         </Pressable>
     )
 }

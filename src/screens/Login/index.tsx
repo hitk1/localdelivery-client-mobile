@@ -1,12 +1,13 @@
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Container, Text, TouchableOpacity } from '@/components/atoms'
+import { Box, Container, TouchableOpacity } from '@/components/atoms'
 import { PasswordInput, TextInput, } from '@/components/molecules'
 import { loginSchema } from './schemas'
-import { Alert } from 'react-native'
+import { StackScreenProps } from '@/commom/navigators/routes-params'
 
-export default function LoginScreen() {
+
+export default function LoginScreen({ navigation }: StackScreenProps ) {
     const form = useForm({
         resolver: yupResolver(loginSchema),
         mode: 'onBlur'
@@ -15,6 +16,9 @@ export default function LoginScreen() {
     const onSubmit = React.useCallback(() => {
         console.log('do something')
     }, [])
+
+    const gotoCreateAccount = React.useCallback(() => navigation.navigate('Onboarding'), [navigation])
+
     return (
         <Container
             justifyContent="center"
@@ -40,15 +44,25 @@ export default function LoginScreen() {
                     label="Senha"
                     textContentType='password'
                     placeholder='Insira sua senha'
+                    returnKeyType="send"
                     containerProps={{
                         mt: 'md'
                     }}
                 />
             </FormProvider>
-            <Box mt="xxl">
+            <Box
+                mt='xxxl'
+                mx="sm"
+            >
                 <TouchableOpacity
-                    label='Entrar'
+                    label="Entrar"
                     onPress={onSubmit}
+                    actionType='secondary'
+                    mb="md"
+                />
+                <TouchableOpacity
+                    label='Criar conta'
+                    onPress={gotoCreateAccount}
                     actionType="primary"
                 />
             </Box>

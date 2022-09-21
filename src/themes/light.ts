@@ -24,6 +24,7 @@ const theme = createTheme({
         lg: 16,
         xl: 24,
         xxl: 48,
+        xxxl: 64,
         hg: 128
     },
     breakpoints: {
@@ -66,6 +67,10 @@ const theme = createTheme({
         primaryButtonLabel: {
             color: 'white',
             fontWeight: 'bold'
+        },
+        secondaryButtonLabel: {
+            color: '$primary',
+            fontWeight: 'bold'
         }
     },
     barVariants: {
@@ -82,6 +87,10 @@ const theme = createTheme({
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 'sm'
+        },
+        secondary: {
+            bg: "white",
+
         }
     }
 })
