@@ -16,7 +16,8 @@ import {
     layout
 } from '@shopify/restyle'
 import { Theme } from '@/themes'
-import Pressable, { PressableProps } from './pressable'
+import Pressable, { PressableProps } from '../atoms/pressable'
+import { defaultHitslops } from '@/common/constants'
 
 type RestyleProps = BackgroundColorProps<Theme> &
     BorderProps<Theme> &
@@ -36,11 +37,16 @@ const restyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
 
 interface Props extends PressableProps {
     containerProps?: RestyleProps
+    Icon: any
+    iconSize?: string
+    iconColor?: string
 }
 
-const Touchable = ({
+const IconButton = ({
     containerProps,
-    children,
+    Icon,
+    iconSize = '26px',
+    iconColor = '#171a21',
     onPress,
     ...rest
 }: React.PropsWithChildren<Props>) => {
@@ -51,10 +57,16 @@ const Touchable = ({
 
     return (
         //@ts-ignore
-        <Pressable {...props} onPress={onPress}>
-            {children}
+        <Pressable
+            onPress={onPress}
+            height={26}
+            width={26}
+            hitSlop={defaultHitslops}
+            {...props}
+        >
+            <Icon size={iconSize} color={iconColor} />
         </Pressable>
     )
 }
 
-export default Touchable
+export default IconButton

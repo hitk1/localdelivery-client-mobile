@@ -61,6 +61,10 @@ const theme = createTheme({
             color: '$foreground',
             fontSize: 16
         },
+        headerText: {
+            color: '$sidebarBackground',
+            fontWeight: 'bold',
+        },
         sidebar: {
             color: '$sidebarForeground'
         },

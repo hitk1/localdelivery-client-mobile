@@ -10,20 +10,23 @@ import {
     spacing,
     spacingShorthand,
     SpacingShorthandProps,
+    createBox,
     composeRestyleFunctions,
-    useRestyle,
-    LayoutProps,
-    layout
+    useRestyle
 } from '@shopify/restyle'
 import { Theme } from '@/themes'
-import Pressable, { PressableProps } from './pressable'
+import Text from './text'
+import { TouchableOpacityProps } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type RestyleProps = BackgroundColorProps<Theme> &
     BorderProps<Theme> &
     OpacityProps<Theme> &
     SpacingProps<Theme> &
-    SpacingShorthandProps<Theme> &
-    LayoutProps<Theme>
+    SpacingShorthandProps<Theme>
+
+const Pressable = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
+type PressableProps = React.ComponentProps<typeof Pressable>
 
 const restyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
     backgroundColor,
@@ -31,19 +34,20 @@ const restyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
     border,
     spacing,
     spacingShorthand,
-    layout
 ])
 
 interface Props extends PressableProps {
+    label: string
+    actionType: 'primary' | 'secondary'
     containerProps?: RestyleProps
 }
 
 const Touchable = ({
+    label,
     containerProps,
-    children,
-    onPress,
+    actionType,
     ...rest
-}: React.PropsWithChildren<Props>) => {
+}: Props) => {
     let props
 
     if (containerProps)
@@ -51,8 +55,19 @@ const Touchable = ({
 
     return (
         //@ts-ignore
-        <Pressable {...props} onPress={onPress}>
-            {children}
+        <Pressable
+            minWidth='100%'
+            height={46}
+            justifyContent="center"
+            alignItems="center"
+            bg={actionType === 'primary' ? '$primary' : 'white'}
+            borderRadius='sm'
+            borderWidth={1}
+            borderColor="$primary"
+            {...rest}
+            {...props}
+        >
+            <Text variant={actionType === 'primary' ? 'primaryButtonLabel' : 'secondaryButtonLabel'}>{label}</Text>
         </Pressable>
     )
 }

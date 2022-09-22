@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Container, TouchableOpacity } from '@/components/atoms'
+import { Box, Container, Button } from '@/components/atoms'
 import { PasswordInput, TextInput, } from '@/components/molecules'
 import { loginSchema } from './schemas'
-import { StackScreenProps } from '@/commom/navigators/routes-params'
+import { StackScreenProps } from '@/common/navigators/routes-params'
 
 
 export default function LoginScreen({ navigation }: StackScreenProps ) {
@@ -54,13 +54,13 @@ export default function LoginScreen({ navigation }: StackScreenProps ) {
                 mt='xxxl'
                 mx="sm"
             >
-                <TouchableOpacity
+                <Button
                     label="Entrar"
                     onPress={onSubmit}
                     actionType='secondary'
                     mb="md"
                 />
-                <TouchableOpacity
+                <Button
                     label='Criar conta'
                     onPress={gotoCreateAccount}
                     actionType="primary"
