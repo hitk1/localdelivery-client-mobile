@@ -1,37 +1,44 @@
 import React from 'react'
-import { getStatusBarHeight } from 'react-native-iphone-x-helper'
-import UiArrowLeft from '@iconscout/react-native-unicons/icons/uil-arrow-left'
 
 import { Box, Container, Text } from '@/components/atoms'
 import { StackScreenProps } from '@/common/navigators/routes-params'
-import { IconButton } from '@/components/molecules'
+import { Header } from '@/components/molecules'
+import { ScrollView } from 'react-native-gesture-handler'
+
+import { OnboardingStep1 } from './components/'
 
 export default function OnboardingScreen({ navigation }: StackScreenProps) {
+    const [steps, setSteps] = React.useState(1)
+    const [subtitle, setSubtitle] = React.useState('Dados básicos')
 
     const handleGoBack = React.useCallback(() => navigation.goBack(), [])
 
     return (
-        <Container
-            mx='md'
-        >
+        <Container mx='md'>
+            <Header
+                title="Registro de conta"
+                onPress={handleGoBack}
+            />
             <Box
-                width="100%"
-                height={46}
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-                style={{
-                    marginTop: getStatusBarHeight() + 15
-                }}
+                marginTop="md"
+                marginLeft="md"
             >
-                <IconButton
-                    onPress={handleGoBack}
-                    Icon={UiArrowLeft}
-                />
-                <Box alignSelf="center">
-                    <Text variant="headerText">Registro de Conta</Text>
-                </Box>
+                <Text>{steps} de 3</Text>
+                <Text
+                    marginTop="sm"
+                    fontWeight="bold"
+                    fontSize={18}
+                >
+                    {subtitle}
+                </Text>
             </Box>
+            <ScrollView
+                contentInsetAdjustmentBehavior='automatic'
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                {steps === 1 && <OnboardingStep1 />}
+            </ScrollView>
         </Container>
     )
 }
