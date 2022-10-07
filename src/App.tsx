@@ -1,26 +1,17 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider } from '@shopify/restyle'
+import { StatusBar } from 'react-native';
+import { ThemeProvider } from 'styled-components';
 
-import defaultTheme from './themes/light'
-
-import Screens from './screens'
+import Routes from './routes'
+import theme from './theme/config'
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <ThemeProvider theme={defaultTheme}>
-          <StatusBar
-            backgroundColor='transparent'
-            translucent 
-            animated
-          />
-          <Screens />
-        </ThemeProvider>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <StatusBar barStyle={"light-content"} backgroundColor="#fff" />
+        <Routes />
+      </ThemeProvider>
+    </>
   )
 }
