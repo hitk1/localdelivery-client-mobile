@@ -21,6 +21,7 @@ const SignIn: React.FC = () => {
                     onSubmit={() => { }}
                 >
                     <Input
+                        label="Testando"
                         name='teste'
                     />
                 </Form>

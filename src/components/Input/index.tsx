@@ -5,11 +5,14 @@ import { useField } from '@unform/core'
 import {
     Container,
     ErrorMessage,
-    TextInput
+    TextInput,
+    Label,
+    ErrorMessageWrapper
 } from './styles'
 
 interface IInputProps extends TextInputProps {
     name: string
+    label: string
     onChangetext?(value: string): void
     rawValue?: string
 }
@@ -19,7 +22,7 @@ interface IInputFieldRef {
     name: String
 }
 
-const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({ name, ...rest }, ref) => {
+const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({ name, label, ...rest }, ref) => {
     const [isFocused, setFocused] = React.useState(false)
     const [isFilled, setFilled] = React.useState(false)
 
@@ -31,13 +34,18 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
     } = useField(name)
 
     const inputFieldRef = React.useRef<any>(null)
-    const inputValueRef = React.useRef<{value: string}>({ value: defaultValue })
+    const inputValueRef = React.useRef<{ value: string }>({ value: defaultValue })
 
     const onChange = React.useCallback((eventFocused: boolean) => {
         setFocused(eventFocused)
-        
-        if(!!eventFocused)
+
+        if (!!eventFocused)
             setFilled(!!inputValueRef.current?.value)
+    }, [])
+
+    const handleInputFocus = React.useCallback((value: boolean) => {
+        setFocused(value)
+        setFilled(!!inputValueRef.current?.value)
     }, [])
 
     React.useImperativeHandle(
@@ -69,8 +77,20 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
 
     return (
         <Container>
-            <TextInput />
-            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <Label>{label}</Label>
+            <TextInput
+                ref={inputFieldRef}
+                isFilled={isFilled}
+                isFocused={isFocused}
+                defaultValue={defaultValue}
+                onFocus={() => handleInputFocus(true)}
+                onBlur={() => handleInputFocus(false)}
+                {...rest as any}
+            />
+            
+            <ErrorMessageWrapper>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
+            </ErrorMessageWrapper>
         </Container>
     )
 }

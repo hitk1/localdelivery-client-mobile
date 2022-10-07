@@ -2,6 +2,7 @@ const pallet = {
     white: 'white',
     black: 'black',
     red: 'red',
+    red200: '#C53030',
     paper00: '#ffffff',
     paper10: '#f5f5f4',
     paper20: '#e6e6e6',
@@ -27,6 +28,7 @@ export default {
         $headerBarBackground: pallet.paper20,
         $inputEmpty: pallet.paper300,
         $inputFilled: pallet.paper900,
+        $error: pallet.red200,
     },
     fonts: {},
     spacing: {
