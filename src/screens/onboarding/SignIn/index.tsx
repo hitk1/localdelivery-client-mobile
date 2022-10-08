@@ -1,6 +1,9 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 import { FormHandles } from '@unform/core'
+import { useNavigation } from '@react-navigation/native'
+
+import { eInitialRouteNames, InitialScreenProps } from '@/routes/initialScreens/routes.config'
 
 import {
     ScreenContainer,
@@ -15,13 +18,18 @@ import {
     LoginForm
 } from './styles'
 
-const SignIn: React.FC = () => {
+const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
     const formRef = React.useRef<FormHandles>(null)
 
     const handleSubmit = () => {
 
         console.log('submitted')
     }
+
+    const handleOnboarding = React.useCallback(() =>
+        navigation.navigate(eInitialRouteNames.ONBOARDING),
+        [navigation]
+    )
 
     const submitForm = React.useCallback(() =>
         formRef.current?.submitForm()
@@ -51,7 +59,7 @@ const SignIn: React.FC = () => {
                         label="Criar Conta"
                     />
                     <SecondaryButton
-                        onPress={() => { }}
+                        onPress={handleOnboarding}
                         label="Entrar"
                         style={{
                             marginTop: 12

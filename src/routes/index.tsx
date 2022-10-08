@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AuthRoutes } from '../routes/onboarding/onboarding.routes'
+import { AuthRoutes } from './initialScreens/initialScreens.routes'
 
 const Routes: React.FC = () => {
 

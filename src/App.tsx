@@ -9,7 +9,7 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <StatusBar barStyle={"light-content"} backgroundColor="#fff" />
+        <StatusBar barStyle={"dark-content"} backgroundColor="#fff" />
         <Routes />
       </ThemeProvider>
     </>

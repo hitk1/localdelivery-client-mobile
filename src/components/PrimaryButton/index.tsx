@@ -1,9 +1,9 @@
 import React from 'react'
 import { TouchableOpacityProps } from 'react-native'
-import { Text } from 'react-native-svg'
+
 import { Container, LabelText } from './styles'
 
-interface Props{
+interface Props extends TouchableOpacityProps {
     onPress(): void
     label: string
 }
@@ -18,7 +18,7 @@ const PrimaryButton: React.FC<Props> = ({
     return (
         <Container
             onPress={onPress}
-            {...rest}
+            {...rest as any}
         >
             <LabelText>{label}</LabelText>
         </Container>

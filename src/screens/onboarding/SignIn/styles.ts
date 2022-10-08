@@ -14,5 +14,4 @@ export const LoginForm = styled(Form)`
 export const ButtonWrapper = styled.View`
     margin-top: ${RFValue(16)}px;
     width: 100%;
-
 `;

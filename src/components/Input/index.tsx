@@ -86,6 +86,7 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
                 defaultValue={defaultValue}
                 onFocus={() => handleInputFocus(true)}
                 onBlur={() => handleInputFocus(false)}
+                numberOfLines={1}
                 {...rest as any}
             />
             

@@ -10,7 +10,4 @@ export const Container = styled.View`
     padding-right: ${RFValue(12)}px;
 
     margin-top: ${getStatusBarHeight() + 6}px;
-
-    align-items: center;
-    justify-content: center;
 `;
