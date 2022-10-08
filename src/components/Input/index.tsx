@@ -9,6 +9,7 @@ import {
     Label,
     ErrorMessageWrapper
 } from './styles'
+import { Input } from '..'
 
 interface IInputProps extends TextInputProps {
     name: string
@@ -95,4 +96,4 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
     )
 }
 
-export const Input = forwardRef(RawInput)
+export default forwardRef(RawInput)
