@@ -22,9 +22,18 @@ export const TextInput = styled.TextInput<ITextInputProps>`
     padding-left: ${RFValue(6)}px;
     padding-right: ${RFValue(6)}px;
 
-    ${props => (props.isFilled || props.isFocused) && css`
+    ${props => (props.isFocused || props.isFilled) && css`
         border-color: ${({ theme }) => theme.colors.$inputFilled};
     `};
+/* 
+    ${props => props.isFocused && css`
+        border-color: ${({ theme }) => theme.colors.$primary};
+    `}
+
+    ${props => props.isFilled && css`
+        border-color: ${({ theme }) => theme.colors.$primary};
+    `} */
+
 `
 
 export const ErrorMessageWrapper = styled.View`

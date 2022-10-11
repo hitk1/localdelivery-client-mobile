@@ -14,7 +14,8 @@ import { Input } from '..'
 interface IInputProps extends TextInputProps {
     name: string
     label: string
-    onChangetext?(value: string): void
+    onChangeText?(value: string): void
+    onFocus?(): void
     rawValue?: string
 }
 
@@ -23,7 +24,7 @@ interface IInputFieldRef {
     name: String
 }
 
-const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({ name, label, ...rest }, ref) => {
+const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({ name, label, onChangeText, onFocus, ...rest }, ref) => {
     const [isFocused, setFocused] = React.useState(false)
     const [isFilled, setFilled] = React.useState(false)
 
@@ -35,19 +36,15 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
     } = useField(name)
 
     const inputFieldRef = React.useRef<any>(null)
-    const inputValueRef = React.useRef<{ value: string }>({ value: defaultValue })
 
-    const onChange = React.useCallback((eventFocused: boolean) => {
-        setFocused(eventFocused)
+    React.useEffect(() => {
+        inputFieldRef.current.value = defaultValue
+    }, [defaultValue])
 
-        if (!!eventFocused)
-            setFilled(!!inputValueRef.current?.value)
-    }, [])
-
-    const handleInputFocus = React.useCallback((value: boolean) => {
-        setFocused(value)
-        setFilled(!!inputValueRef.current?.value)
-    }, [])
+    React.useEffect(() => {
+        if (inputFieldRef.current)
+            inputFieldRef.current.value = defaultValue
+    }, [defaultValue])
 
     React.useImperativeHandle(
         ref,
@@ -60,18 +57,43 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
         []
     )
 
+    const handleInputFocus = (value: boolean) => {
+        setFocused(value)
+        setFilled(!!inputFieldRef.current.value)
+
+        if (value && onFocus)   //Is needed to be able to handle focus event on screen
+            onFocus()
+    }
+
+    const handleOnChange = React.useCallback((text: string) => {
+        if (inputFieldRef.current)
+            inputFieldRef.current.value = text
+
+        if (onChangeText)
+            onChangeText(text)
+    }, [onChangeText])
+
     React.useEffect(() => {
         registerField({
             name: fieldName,
-            ref: inputValueRef.current,
-            path: 'value',
-            setValue(_, value: string) {
-                inputValueRef.current.value = value
-                inputFieldRef.current.setNativeProps({ text: value })
+            ref: inputFieldRef.current,
+            getValue: () => {
+                if (inputFieldRef.current)
+                    return inputFieldRef.current.value
+
+                return ''
             },
-            clearValue() {
-                inputValueRef.current.value = '',
-                    inputFieldRef.current.clear()
+            setValue: (_, value) => {
+                if (inputFieldRef.current) {
+                    inputFieldRef.current.setNativeProps({ text: value })
+                    inputFieldRef.current.value = value
+                }
+            },
+            clearValue: () => {
+                if (inputFieldRef.current) {
+                    inputFieldRef.current.setNativeProps({ text: '' })
+                    inputFieldRef.current.value = ''
+                }
             }
         })
     }, [fieldName, registerField])
@@ -86,10 +108,11 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
                 defaultValue={defaultValue}
                 onFocus={() => handleInputFocus(true)}
                 onBlur={() => handleInputFocus(false)}
+                onChangeText={handleOnChange}
                 numberOfLines={1}
                 {...rest as any}
             />
-            
+
             <ErrorMessageWrapper>
                 {error && <ErrorMessage>{error}</ErrorMessage>}
             </ErrorMessageWrapper>

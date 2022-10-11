@@ -30,18 +30,29 @@ const BasicData: React.FC<any> = () => {
     const onSubmit = React.useCallback(async (data: IFormData) => {
         formRef.current?.setErrors({})
 
+        console.log(data)
+
         try {
             await basicDataSchema.validate(
                 data,
                 { abortEarly: false }
             )
         } catch (error) {
-            if(error instanceof Yup.ValidationError){
+            if (error instanceof Yup.ValidationError) {
                 formRef.current?.setErrors(getYupValidationErrors(error))
                 return
             }
         }
     }, [])
+
+    const handleFocus = React.useCallback((inputRef: React.RefObject<{name: string}>) => {
+        const errors = formRef.current?.getErrors()
+
+        if(errors){
+            delete errors[inputRef.current?.name as string]
+            formRef.current?.setErrors(errors as any)
+        }
+     }, [])
 
     return (
         <OnboardingForm
@@ -58,9 +69,11 @@ const BasicData: React.FC<any> = () => {
                 returnKeyType='next'
                 keyboardType='name-phone-pad'
                 maxLength={300}
+                onFocus={() => handleFocus(nameRef)}
                 onSubmitEditing={() => emailRef.current?.focus()}
             />
             <Input
+            ref={emailRef}
                 name="email"
                 label="Email"
                 placeholder='Insira seu email'
@@ -69,9 +82,11 @@ const BasicData: React.FC<any> = () => {
                 returnKeyType='next'
                 keyboardType='email-address'
                 maxLength={200}
+                onFocus={() => handleFocus(emailRef)}
                 onSubmitEditing={() => phoneRef.current?.focus()}
             />
             <Input
+                ref={phoneRef}
                 name="phone_number"
                 label='Telefone'
                 placeholder='Insira seu telefone'
@@ -80,6 +95,7 @@ const BasicData: React.FC<any> = () => {
                 keyboardType='number-pad'
                 maxLength={11}
                 returnKeyType="send"
+                onFocus={() => handleFocus(phoneRef)}
                 onSubmitEditing={submitForm}
             />
 
