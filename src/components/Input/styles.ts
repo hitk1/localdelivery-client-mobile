@@ -6,9 +6,17 @@ interface ITextInputProps {
     isFocused: boolean
 }
 
-export const Container = styled.View`
+interface IContainerProps {
+    disabled?: boolean
+}
+
+export const Container = styled.View<IContainerProps>`
     width: 100%;
     height: ${RFValue(74)}px;
+
+    ${props => props.disabled && css`
+        opacity: 0.3;
+    `}
 `
 
 export const TextInput = styled.TextInput<ITextInputProps>`
@@ -25,14 +33,6 @@ export const TextInput = styled.TextInput<ITextInputProps>`
     ${props => (props.isFocused || props.isFilled) && css`
         border-color: ${({ theme }) => theme.colors.$inputFilled};
     `};
-/* 
-    ${props => props.isFocused && css`
-        border-color: ${({ theme }) => theme.colors.$primary};
-    `}
-
-    ${props => props.isFilled && css`
-        border-color: ${({ theme }) => theme.colors.$primary};
-    `} */
 
 `
 

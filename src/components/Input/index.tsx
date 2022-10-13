@@ -17,6 +17,7 @@ interface IInputProps extends TextInputProps {
     onChangeText?(value: string): void
     onFocus?(): void
     rawValue?: string
+    disabled?: boolean
 }
 
 interface IInputFieldRef {
@@ -24,7 +25,14 @@ interface IInputFieldRef {
     name: String
 }
 
-const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({ name, label, onChangeText, onFocus, ...rest }, ref) => {
+const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
+    name,
+    label,
+    onChangeText,
+    onFocus,
+    disabled,
+    ...rest
+}, ref) => {
     const [isFocused, setFocused] = React.useState(false)
     const [isFilled, setFilled] = React.useState(false)
 
@@ -99,12 +107,15 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
     }, [fieldName, registerField])
 
     return (
-        <Container>
+        <Container
+            disabled={disabled}
+        >
             <Label>{label}</Label>
             <TextInput
                 ref={inputFieldRef}
                 isFilled={isFilled}
                 isFocused={isFocused}
+                // disabled={true}
                 defaultValue={defaultValue}
                 onFocus={() => handleInputFocus(true)}
                 onBlur={() => handleInputFocus(false)}

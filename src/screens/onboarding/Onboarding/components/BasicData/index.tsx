@@ -10,6 +10,8 @@ import {
 } from './styles'
 import { basicDataSchema } from './schema'
 import { getYupValidationErrors } from '@/common/validations/yupValidationError'
+import { ApiService } from '@/services/api'
+import { useOnboarding } from '@/hooks/onboarding'
 
 interface IFormData {
     name: string
@@ -17,42 +19,57 @@ interface IFormData {
     phone_number: string
 }
 
-const BasicData: React.FC<any> = () => {
+interface Props {
+    handlePageChange(): void
+}
+
+const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
+    const { saveUserId } = useOnboarding()
     const formRef = React.useRef<FormHandles>(null)
     const nameRef = React.useRef<TextInput>(null)
     const emailRef = React.useRef<TextInput>(null)
     const phoneRef = React.useRef<TextInput>(null)
+
+    const [isSubmiting, setSubmiting] = React.useState(false)
 
     const submitForm = React.useCallback(() =>
         formRef.current?.submitForm()
         , [formRef])
 
     const onSubmit = React.useCallback(async (data: IFormData) => {
+        const api = new ApiService()
         formRef.current?.setErrors({})
-
-        console.log(data)
 
         try {
             await basicDataSchema.validate(
                 data,
                 { abortEarly: false }
             )
+            setSubmiting(true)
+
+            const userId = await api.onboardingCreateBaseData({
+                ...data
+            })
+
+            await saveUserId(userId)
+            handlePageChange()
         } catch (error) {
             if (error instanceof Yup.ValidationError) {
                 formRef.current?.setErrors(getYupValidationErrors(error))
                 return
             }
         }
+        setSubmiting(false)
     }, [])
 
-    const handleFocus = React.useCallback((inputRef: React.RefObject<{name: string}>) => {
+    const handleFocus = React.useCallback((inputRef: React.RefObject<{ name: string }>) => {
         const errors = formRef.current?.getErrors()
 
-        if(errors){
+        if (errors) {
             delete errors[inputRef.current?.name as string]
             formRef.current?.setErrors(errors as any)
         }
-     }, [])
+    }, [])
 
     return (
         <OnboardingForm
@@ -69,11 +86,12 @@ const BasicData: React.FC<any> = () => {
                 returnKeyType='next'
                 keyboardType='name-phone-pad'
                 maxLength={300}
+                disabled={isSubmiting}
                 onFocus={() => handleFocus(nameRef)}
                 onSubmitEditing={() => emailRef.current?.focus()}
             />
             <Input
-            ref={emailRef}
+                ref={emailRef}
                 name="email"
                 label="Email"
                 placeholder='Insira seu email'
@@ -82,6 +100,7 @@ const BasicData: React.FC<any> = () => {
                 returnKeyType='next'
                 keyboardType='email-address'
                 maxLength={200}
+                disabled={isSubmiting}
                 onFocus={() => handleFocus(emailRef)}
                 onSubmitEditing={() => phoneRef.current?.focus()}
             />
@@ -95,6 +114,7 @@ const BasicData: React.FC<any> = () => {
                 keyboardType='number-pad'
                 maxLength={11}
                 returnKeyType="send"
+                disabled={isSubmiting}
                 onFocus={() => handleFocus(phoneRef)}
                 onSubmitEditing={submitForm}
             />
@@ -102,6 +122,7 @@ const BasicData: React.FC<any> = () => {
             <PrimaryButton
                 onPress={submitForm}
                 label="Continuar"
+                disabled={isSubmiting}
                 style={{
                     marginTop: 32
                 }}

@@ -15,6 +15,7 @@ import {
 import {
     BackgroundScreen,
     ButtonWrapper,
+    ComponentWrapper,
     LoginForm
 } from './styles'
 
@@ -36,38 +37,40 @@ const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
         , [formRef])
 
     return (
-        <BackgroundScreen
-            onPress={Keyboard.dismiss}
-        >
-            <ScreenContainer>
-                <LoginForm
-                    ref={formRef}
-                    onSubmit={handleSubmit}
-                >
-                    <Input
-                        name='email'
-                        label="Email"
-                    />
-                    <Input
-                        name='password'
-                        label="Password"
-                    />
-                </LoginForm>
-                <ButtonWrapper>
-                    <PrimaryButton
-                        onPress={submitForm}
-                        label="Criar Conta"
-                    />
-                    <SecondaryButton
-                        onPress={handleOnboarding}
-                        label="Entrar"
-                        style={{
-                            marginTop: 12
-                        }}
-                    />
-                </ButtonWrapper>
-            </ScreenContainer>
-        </BackgroundScreen>
+        <ScreenContainer>
+            <BackgroundScreen
+                onPress={Keyboard.dismiss}
+            >
+                <ComponentWrapper>
+                    <LoginForm
+                        ref={formRef}
+                        onSubmit={handleSubmit}
+                    >
+                        <Input
+                            name='email'
+                            label="Email"
+                        />
+                        <Input
+                            name='password'
+                            label="Password"
+                        />
+                    </LoginForm>
+                    <ButtonWrapper>
+                        <SecondaryButton
+                            onPress={submitForm}
+                            label="Entrar"
+                        />
+                        <PrimaryButton
+                            onPress={handleOnboarding}
+                            label="Criar Conta"
+                            style={{
+                                marginTop: 12
+                            }}
+                        />
+                    </ButtonWrapper>
+                </ComponentWrapper>
+            </BackgroundScreen>
+        </ScreenContainer>
     )
 }
 

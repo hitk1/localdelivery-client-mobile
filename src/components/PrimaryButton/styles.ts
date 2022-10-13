@@ -1,7 +1,7 @@
+import styled, { css } from 'styled-components/native'
 import { RFValue } from 'react-native-responsive-fontsize';
-import styled from 'styled-components/native'
 
-export const Container = styled.TouchableOpacity`
+export const Container = styled.TouchableOpacity<{ disabled: boolean }>`
     width: 100%;
     height: ${RFValue(46)}px;
 
@@ -11,6 +11,10 @@ export const Container = styled.TouchableOpacity`
 
     align-items: center;
     justify-content: center;
+
+    ${props => props.disabled && css`
+        opacity: 0.3;
+    `}
 `;
 
 export const LabelText = styled.Text`

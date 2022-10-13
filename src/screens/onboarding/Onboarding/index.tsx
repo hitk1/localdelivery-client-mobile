@@ -17,6 +17,7 @@ import {
     StepDescription,
     FormWrapper
 } from './styles'
+import { Address } from './components/Address'
 
 const onboardingStepsDescription = [
     'Dados cadastrais',
@@ -32,6 +33,10 @@ const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
         [navigation]
     )
 
+    const handlePageChange = (page: number) => {
+        setStep(page)
+    }
+
     return (
         <TouchableWithoutFeedback>
             <ScreenContainer>
@@ -46,7 +51,12 @@ const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
                 </StepsInfo>
 
                 <FormWrapper>
-                    {step === 1 && <BasicData />}
+                    {step === 1 && <BasicData
+                        handlePageChange={() => handlePageChange(2)}
+                    />}
+                    {step === 2 && <Address
+                        handlePageChange={() => handlePageChange(3)}
+                    />}
                 </FormWrapper>
             </ScreenContainer>
         </TouchableWithoutFeedback>
