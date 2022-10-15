@@ -24,7 +24,12 @@ interface Props {
 }
 
 const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
-    const { saveUserId } = useOnboarding()
+    const api = new ApiService()
+    const {
+        saveUserId,
+        getUserId,
+        clearOnboarding
+    } = useOnboarding()
     const formRef = React.useRef<FormHandles>(null)
     const nameRef = React.useRef<TextInput>(null)
     const emailRef = React.useRef<TextInput>(null)
@@ -37,7 +42,6 @@ const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
         , [formRef])
 
     const onSubmit = React.useCallback(async (data: IFormData) => {
-        const api = new ApiService()
         formRef.current?.setErrors({})
 
         try {
@@ -69,6 +73,32 @@ const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
             delete errors[inputRef.current?.name as string]
             formRef.current?.setErrors(errors as any)
         }
+    }, [])
+
+    const fetchUserBasicData = React.useCallback(async (userId: string) => {
+        setSubmiting(true)
+        try {
+            const { customer } = await api.onboardingGetUserBasicData(userId)
+
+            formRef.current?.setData(customer)
+
+        } catch (error) {
+            console.log('Error on fetch user basic data')
+            await clearOnboarding()
+        } finally {
+            setSubmiting(false)
+        }
+    }, [])
+
+    React.useEffect(() => {
+        (async () => {
+            const userId = await getUserId()
+
+            if (!userId || userId === '')
+                return
+
+            await fetchUserBasicData(userId)
+        })()
     }, [])
 
     return (

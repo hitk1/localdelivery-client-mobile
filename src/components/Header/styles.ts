@@ -16,6 +16,7 @@ export const Container = styled.View`
 export const BackButton = styled.TouchableOpacity`
     position: absolute;
     left: 0;
+    margin-left: ${({ theme}) => theme.spacing.sm}px;
 `;
 
 export const Title = styled.Text`
