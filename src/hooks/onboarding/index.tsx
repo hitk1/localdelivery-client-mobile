@@ -3,8 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface IOnboardingContext {
     onboardingUserId: string | null
+    onboardingAddressId: string | null
     saveUserId(userId: string): Promise<void>
     getUserId(): Promise<string>
+    saveAddressId(addressId: string): Promise<void>
+    getAddressId(): Promise<string>
     clearOnboarding(): Promise<void>
 }
 
@@ -16,6 +19,7 @@ type ProviderProps = {
 
 const OnboardingProvider: React.FC<ProviderProps> = ({ children }) => {
     const [userId, setUserId] = React.useState<string | null>(null)
+    const [addressId, setAddressId] = React.useState<string | null>(null)
 
     const saveUserId = async (userId: string) => await AsyncStorage.setItem('@localdelivery:onboarding:user', userId)
 
@@ -28,24 +32,50 @@ const OnboardingProvider: React.FC<ProviderProps> = ({ children }) => {
         return result
     }
 
-    const clearOnboarding = async () => await AsyncStorage.removeItem('@localdelivery:onboarding:user')
+    const saveAddressId = async (addressId: string) => await AsyncStorage.setItem('@localdelivery:onboarding:address', addressId)
+
+    const getAddressId = async () => {
+        const result = await AsyncStorage.getItem('@localdelivery:onboarding:address')
+
+        if(!result)
+            return ''
+
+        return result
+    }
+
+    const clearOnboarding = async () => {
+        await Promise.all([
+            AsyncStorage.removeItem('@localdelivery:onboarding:user'),
+            AsyncStorage.removeItem('@localdelivery:onboarding:address'),
+        ])
+    }
 
     React.useEffect(() => {
         (async () => {
-            const userId = await getUserId()
+            const [
+                userId,
+                addressId
+            ] = await Promise.all([
+                getUserId(),
+                getAddressId()
+            ])
 
-            if (!userId || userId === '')
-                return
-
-            setUserId(userId)
+            if(userId)
+                setUserId(userId)
+            
+            if(addressId)
+                setAddressId(addressId)
         })()
     }, [])
 
     return <OnboardingContext.Provider value={{
         onboardingUserId: userId,
-        clearOnboarding,
+        onboardingAddressId: addressId,
         saveUserId,
-        getUserId
+        getUserId,
+        saveAddressId,
+        getAddressId,
+        clearOnboarding,
     }}>
         {children}
     </OnboardingContext.Provider>

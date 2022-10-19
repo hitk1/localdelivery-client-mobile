@@ -13,5 +13,9 @@ export const StepDescription = styled.Text`
 `;
 
 export const FormWrapper = styled.View`
-    margin-top: ${({ theme }) => RFValue(theme.spacing.xxl)}px;
+    margin-top: ${({ theme }) => RFValue(theme.spacing.xl)}px;
+`;
+
+export const KeyboardAvoid = styled.KeyboardAvoidingView`
+    flex: 1;
 `;

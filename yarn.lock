@@ -1466,11 +1466,6 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@iconscout/react-native-unicons@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@iconscout/react-native-unicons/-/react-native-unicons-1.0.3.tgz#edd2fb7596faf765931b29dfb0ece519cdadaabf"
-  integrity sha512-fP/INOvoqNv6j7Ysft4uiB/vRi0jAPNpLaefM3SNGtDssCN619DJtHUKLQR6wTb+5aIbhwu99Hb+GrpM5S8Vtw==
-
 "@jest/create-cache-key-function@^27.0.1":
   version "27.5.1"
   resolved "https://registry.yarnpkg.com/@jest/create-cache-key-function/-/create-cache-key-function-27.5.1.tgz#7448fae15602ea95c828f5eceed35c202a820b31"

@@ -2,8 +2,27 @@
 export interface IApiService {
     onboardingCreateBaseData(params: IParamsOnboardingCreateBaseData): Promise<string>
     onboardingGetUserBasicData(userId: string): Promise<IResultOnboardingUserBasicData>
-    onboardingGetUserAddress(userId: string): Promise<any>
-    onboardingCreateAddress(params: IParamsOnboardingCreateAddress): Promise<any>
+    onboardingGetUserAddress(userId: string): Promise<IResultOnboardingGetAddress>
+    onboardingCreateAddress(params: IParamsOnboardingCreateAddress): Promise<IResultOnboardingCreateAddress>
+}
+
+export interface IResultOnboardingGetAddress {
+    address: {
+        address: string,
+        address_alias?: string
+        city_name: string
+        complement?: string
+        ibge_code: string
+        neighborhood: string
+        number: string
+        zip_code: string
+        state: string
+    }
+}
+
+export interface IResultOnboardingCreateAddress {
+    address_id: string
+    message: string
 }
 
 export interface IParamsOnboardingCreateAddress {

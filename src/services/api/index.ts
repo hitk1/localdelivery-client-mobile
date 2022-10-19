@@ -1,16 +1,16 @@
-import { IApiService, IParamsOnboardingCreateAddress, IParamsOnboardingCreateBaseData, IResultOnboardingUserBasicData } from "./interfaces";
+import { IApiService, IParamsOnboardingCreateAddress, IParamsOnboardingCreateBaseData, IResultOnboardingCreateAddress, IResultOnboardingGetAddress, IResultOnboardingUserBasicData } from "./interfaces";
 import { clientHttp } from './httpClient'
 
 export class ApiService implements IApiService {
     
-    async onboardingCreateAddress(params: IParamsOnboardingCreateAddress): Promise<any> {
+    async onboardingCreateAddress(params: IParamsOnboardingCreateAddress): Promise<IResultOnboardingCreateAddress> {
         return clientHttp.post(
             '/customers/onboarding/address',
             params
         )
     }
     
-    async onboardingGetUserAddress(userId: string): Promise<any> {
+    async onboardingGetUserAddress(userId: string): Promise<IResultOnboardingGetAddress> {
         return clientHttp.get(
             `/customers/onboarding/address/${userId}`
         )

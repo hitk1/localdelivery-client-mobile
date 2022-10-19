@@ -115,7 +115,8 @@ const RawInput: React.ForwardRefRenderFunction<IInputFieldRef, IInputProps> = ({
                 ref={inputFieldRef}
                 isFilled={isFilled}
                 isFocused={isFocused}
-                // disabled={true}
+                editable={!disabled}
+                selectTextOnFocus={!disabled}
                 defaultValue={defaultValue}
                 onFocus={() => handleInputFocus(true)}
                 onBlur={() => handleInputFocus(false)}

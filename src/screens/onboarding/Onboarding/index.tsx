@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback } from 'react-native'
 
 import { InitialScreenProps } from '@/routes/initialScreens/routes.config'
 
@@ -15,7 +15,8 @@ import {
 import {
     StepsInfo,
     StepDescription,
-    FormWrapper
+    FormWrapper,
+    KeyboardAvoid
 } from './styles'
 import { Address } from './components/Address'
 
@@ -38,28 +39,28 @@ const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
     }
 
     return (
-        <TouchableWithoutFeedback>
-            <ScreenContainer>
-                <Header
-                    title='Registrar'
-                    backButtonAction={handleGoBack}
-                />
+        <ScreenContainer>
+            <Header
+                title='Registrar'
+                backButtonAction={handleGoBack}
+            />
 
-                <StepsInfo>
-                    <Text>{step} de 3</Text>
-                    <StepDescription>{onboardingStepsDescription[step - 1]}</StepDescription>
-                </StepsInfo>
+            <StepsInfo>
+                <Text>{step} de 3</Text>
+                <StepDescription>{onboardingStepsDescription[step - 1]}</StepDescription>
+            </StepsInfo>
 
-                <FormWrapper>
-                    {step === 1 && <BasicData
-                        handlePageChange={() => handlePageChange(2)}
-                    />}
-                    {step === 2 && <Address
-                        handlePageChange={() => handlePageChange(3)}
-                    />}
-                </FormWrapper>
-            </ScreenContainer>
-        </TouchableWithoutFeedback>
+            <KeyboardAvoid behavior='height'>
+            <FormWrapper>
+                {step === 1 && <BasicData
+                    handlePageChange={() => handlePageChange(2)}
+                />}
+                {step === 2 && <Address
+                    handlePageChange={() => handlePageChange(3)}
+                />}
+            </FormWrapper>
+            </KeyboardAvoid>
+        </ScreenContainer>
     )
 }
 

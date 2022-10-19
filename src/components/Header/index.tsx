@@ -1,5 +1,5 @@
 import React from 'react'
-import BackIcon from '@iconscout/react-native-unicons/icons/uil-arrow-left'
+import Icon from '@expo/vector-icons/Ionicons'
 
 import {
     Container,
@@ -24,10 +24,11 @@ const Header: React.FC<Props> = ({
                 onPress={backButtonAction}
                 hitSlop={defaultHitSlops}
             >
-                <BackIcon 
+                <Icon 
+                    name="arrow-back"
                     size={22}
                     color="#000"
-                />
+                />  
             </BackButton>
             <Title>{title}</Title>
         </Container>
