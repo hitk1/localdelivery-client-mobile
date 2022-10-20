@@ -1,9 +1,11 @@
-import { Input, PrimaryButton } from '@/components'
-import { useOnboarding } from '@/hooks/onboarding'
 import React from 'react'
-import { ApiService } from '@/services/api'
-import { FormHandles } from '@unform/core'
+import * as Yup from 'yup'
 import { TextInput } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
+import { FormHandles } from '@unform/core'
+import { useOnboarding } from '@/hooks/onboarding'
+import { ApiService } from '@/services/api'
+import { Input, PrimaryButton } from '@/components'
 
 import {
     OnboardingForm,
@@ -11,6 +13,7 @@ import {
 } from './styles'
 import { IParamsOnboardingCreateAddress } from '@/services/api/interfaces'
 import { KeyboardAvoidingView } from 'react-native'
+import { getYupValidationErrors } from '@/common/validations/yupValidationError'
 
 interface IFormData {
     address: string
@@ -52,6 +55,7 @@ const Address = ({ handlePageChange }: Props) => {
 
         formatedData = {
             ...formatedData,
+            zip_code: '15830000',
             ibge_code: '3538105',
             customer_id: onboardingUserId
         }
@@ -65,13 +69,24 @@ const Address = ({ handlePageChange }: Props) => {
 
             setSubmiting(true)
             const { address_id, message } = await api.onboardingCreateAddress(formatedData)
-
             console.log(message)
             await saveAddressId(address_id)
 
             handlePageChange()
         } catch (error) {
-            console.log({ error })
+            if (error instanceof Yup.ValidationError) {
+                formRef.current?.setErrors(getYupValidationErrors(error))
+                return
+            }
+
+            console.log('Error on created address')
+            console.log(error.message)
+
+            Toast.show({
+                text1: 'Erro inesperado ao cadastrar endereço',
+                type: 'error',
+                onPress: () => Toast.hide()
+            })
         }
 
         setSubmiting(false)
@@ -109,7 +124,6 @@ const Address = ({ handlePageChange }: Props) => {
 
     React.useEffect(() => {
         (async () => {
-            console.log(onboardingAddressId)
             if (onboardingAddressId)
                 await fetchUserAddress(onboardingAddressId)
         })()
@@ -182,20 +196,6 @@ const Address = ({ handlePageChange }: Props) => {
                     onSubmitEditing={() => zipCodeRef.current?.focus()}
                 />
                 <Input
-                    ref={zipCodeRef}
-                    name="zip_code"
-                    label="CEP"
-                    placeholder='Insira o Cep'
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    returnKeyType='next'
-                    keyboardType='number-pad'
-                    maxLength={8}
-                    disabled={isSubmiting}
-                    onFocus={() => handleFocus(zipCodeRef)}
-                    onSubmitEditing={() => aliasRef.current?.focus()}
-                />
-                <Input
                     ref={aliasRef}
                     name="address_alias"
                     label="Apelido do endereço"
@@ -211,17 +211,24 @@ const Address = ({ handlePageChange }: Props) => {
                 />
                 <Input
                     ref={null}
+                    name="zip_code"
+                    label="CEP"
+                    value="15830-000"
+                    disabled
+                />
+                <Input
+                    ref={null}
                     name="city"
                     label="Cidade"
                     value="Pindorama"
-                    disabled={true}
+                    disabled
                 />
                 <Input
                     ref={null}
                     name="state"
                     label="Estado"
                     value="SP"
-                    disabled={true}
+                    disabled
                 />
                 <PrimaryButton
                     onPress={submitForm}

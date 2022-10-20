@@ -1,6 +1,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { TextInput } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
 import { FormHandles } from '@unform/core'
 
 import { Input, PrimaryButton } from '@/components'
@@ -62,13 +63,19 @@ const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
                 formRef.current?.setErrors(getYupValidationErrors(error))
                 return
             }
+
+            console.log('Error on create basic data')
+            console.log(error.message)
+            Toast.show({
+                type: 'error',
+                text1: 'Erro inesperado ao cadastrar endereço',
+            })
         }
         setSubmiting(false)
     }, [])
 
     const handleFocus = React.useCallback((inputRef: React.RefObject<{ name: string }>) => {
         const errors = formRef.current?.getErrors()
-
         if (errors) {
             delete errors[inputRef.current?.name as string]
             formRef.current?.setErrors(errors as any)
