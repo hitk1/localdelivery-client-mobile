@@ -13,6 +13,7 @@ import { basicDataSchema } from './schema'
 import { getYupValidationErrors } from '@/common/validations/yupValidationError'
 import { ApiService } from '@/services/api'
 import { useOnboarding } from '@/hooks/onboarding'
+import { normalizeInputValue } from '@/common/utils'
 
 interface IFormData {
     name: string
@@ -45,15 +46,17 @@ const BasicData: React.FC<any> = ({ handlePageChange }: Props) => {
     const onSubmit = React.useCallback(async (data: IFormData) => {
         formRef.current?.setErrors({})
 
+        const formatedData = normalizeInputValue<IFormData>(data)
+
         try {
             await basicDataSchema.validate(
-                data,
+                formatedData,
                 { abortEarly: false }
             )
             setSubmiting(true)
 
             const userId = await api.onboardingCreateBaseData({
-                ...data
+                ...formatedData
             })
 
             await saveUserId(userId)

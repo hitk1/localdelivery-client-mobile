@@ -19,11 +19,12 @@ import {
     KeyboardAvoid
 } from './styles'
 import { Address } from './components/Address'
+import { PasswordRegister } from './components/Password'
 
 const onboardingStepsDescription = [
     'Dados cadastrais',
     'Endereço',
-    'Senha'
+    'Registro de senha'
 ]
 
 const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
@@ -36,6 +37,10 @@ const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
 
     const handlePageChange = (page: number) => {
         setStep(page)
+    }
+    
+    const handleFinish = () => {
+        navigation.goBack()   
     }
 
     return (
@@ -57,6 +62,9 @@ const Onboarding: React.FC<InitialScreenProps> = ({ navigation }) => {
                 />}
                 {step === 2 && <Address
                     handlePageChange={() => handlePageChange(3)}
+                />}
+                {step === 3 && <PasswordRegister 
+                    onFinish={handleFinish}
                 />}
             </FormWrapper>
             </KeyboardAvoid>

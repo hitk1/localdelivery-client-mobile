@@ -1,4 +1,5 @@
 import Input from './Input'
+import PasswordInput from './PasswordInput'
 import PrimaryButton from './PrimaryButton'
 import ScreenContainer from './ScreenContainer'
 import SecondaryButton from './SecondaryButton'
@@ -9,5 +10,6 @@ export {
     PrimaryButton,
     ScreenContainer,
     SecondaryButton,
-    Header
+    Header,
+    PasswordInput
 }

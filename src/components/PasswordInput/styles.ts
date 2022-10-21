@@ -6,11 +6,7 @@ interface ITextInputProps {
     isFocused: boolean
 }
 
-interface IContainerProps {
-    disabled?: boolean
-}
-
-export const Container = styled.View<IContainerProps>`
+export const Container = styled.View<{ disabled?: boolean }>`
     width: 100%;
     height: ${RFValue(74)}px;
 
@@ -20,8 +16,17 @@ export const Container = styled.View<IContainerProps>`
 `
 
 export const TextInput = styled.TextInput<ITextInputProps>`
+    width: 92%;
+`
+
+export const ContentContainer = styled.View<ITextInputProps>`
     flex: 1;
     height: 90%;
+
+    flex-direction: row;
+
+    border-width: 2px;
+    border-color: green;
 
     border-width: 1px;
     border-color: ${({ theme }) => theme.colors.$inputEmpty};
@@ -33,8 +38,12 @@ export const TextInput = styled.TextInput<ITextInputProps>`
     ${props => (props.isFocused || props.isFilled) && css`
         border-color: ${({ theme }) => theme.colors.$inputFilled};
     `};
+`;
 
-`
+export const ToggleButton = styled.TouchableOpacity`
+    align-items: center;
+    justify-content: center;
+`;
 
 export const ErrorMessageWrapper = styled.View`
     margin-top: 6px;

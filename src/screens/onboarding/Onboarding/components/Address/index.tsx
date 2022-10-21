@@ -14,6 +14,7 @@ import {
 import { IParamsOnboardingCreateAddress } from '@/services/api/interfaces'
 import { KeyboardAvoidingView } from 'react-native'
 import { getYupValidationErrors } from '@/common/validations/yupValidationError'
+import { normalizeInputValue } from '@/common/utils'
 
 interface IFormData {
     address: string
@@ -21,7 +22,9 @@ interface IFormData {
     complement: string
     neighborhood: string
     zip_code: string
-    alias_address: string
+    ibge_code?: string
+    customer_id?: string
+    address_alias?: string
 }
 
 interface Props {
@@ -51,24 +54,33 @@ const Address = ({ handlePageChange }: Props) => {
     const onSubmit = React.useCallback(async (data: IFormData) => {
         formRef.current?.setErrors({})
 
-        let formatedData = JSON.parse(JSON.stringify(data))
+        let formatedData = normalizeInputValue<IFormData>(data)
 
         formatedData = {
             ...formatedData,
             zip_code: '15830000',
             ibge_code: '3538105',
-            customer_id: onboardingUserId
+            customer_id: onboardingUserId!
         }
 
         try {
-            if (!data.alias_address)
+            if (!data.address_alias)
                 formatedData = {
                     ...formatedData,
                     address_alias: 'Endereço Principal'
                 } as IParamsOnboardingCreateAddress
 
             setSubmiting(true)
-            const { address_id, message } = await api.onboardingCreateAddress(formatedData)
+            const { address_id, message } = await api.onboardingCreateAddress({
+                address: formatedData.address,
+                number: formatedData.number,
+                complement: formatedData.complement,
+                neighborhood: formatedData.neighborhood,
+                zip_code: formatedData.zip_code,
+                address_alias: formatedData.address_alias!,
+                ibge_code: formatedData.ibge_code!,
+                customer_id: formatedData.customer_id!,
+            })
             console.log(message)
             await saveAddressId(address_id)
 
@@ -81,6 +93,7 @@ const Address = ({ handlePageChange }: Props) => {
 
             console.log('Error on created address')
             console.log(error.message)
+            console.log({error})
 
             Toast.show({
                 text1: 'Erro inesperado ao cadastrar endereço',
