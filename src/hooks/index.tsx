@@ -6,10 +6,12 @@ type Props = {
     children: React.ReactNode
 }
 
-const HooksProvider = ({ children }: Props) => (
+const OnboardingContext = ({ children }: Props) => (
     <OnboardingProvider>
         {children}
     </OnboardingProvider>
 )
 
-export default HooksProvider
+export {
+    OnboardingContext
+}

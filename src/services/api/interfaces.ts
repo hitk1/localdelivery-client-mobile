@@ -5,8 +5,21 @@ export interface IApiService {
     onboardingGetUserAddress(userId: string): Promise<IResultOnboardingGetAddress>
     onboardingCreateAddress(params: IParamsOnboardingCreateAddress): Promise<IResultOnboardingCreateAddress>
     onboardingRegisterPassword(params: IParamsOnboardingAssignPassword): Promise<{ message: string }>
+    refreshToken(refreshToken: string): Promise<IResultLogin>
+    signIn(email: string, password: string): Promise<IResultLogin>
 }
 
+export interface IResultLogin {
+    customer: {
+        email: string
+        id: string
+        is_active: string
+        name: string
+    },
+    refresh_token: string
+    role: string
+    token: string
+}
 export interface IParamsOnboardingAssignPassword {
     customer_id: string
     password: string

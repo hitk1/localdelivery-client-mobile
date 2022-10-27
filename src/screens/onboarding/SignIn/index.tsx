@@ -1,7 +1,7 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 import { FormHandles } from '@unform/core'
-import { useNavigation } from '@react-navigation/native'
+import { TextInput } from 'react-native-gesture-handler'
 
 import { eInitialRouteNames, InitialScreenProps } from '@/routes/initialScreens/routes.config'
 
@@ -9,7 +9,8 @@ import {
     ScreenContainer,
     Input,
     PrimaryButton,
-    SecondaryButton
+    SecondaryButton,
+    PasswordInput
 } from '@/components'
 
 import {
@@ -18,13 +19,36 @@ import {
     ComponentWrapper,
     LoginForm
 } from './styles'
+import { normalizeInputValue } from '@/common/utils'
+import { useAuth } from '@/hooks/auth'
+
+interface IFormData {
+    email: string
+    password: string
+}
 
 const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
+    const {
+        signIn
+    } = useAuth()
+
     const formRef = React.useRef<FormHandles>(null)
+    const emailRef = React.useRef<TextInput>(null)
+    const passwordRef = React.useRef<TextInput>(null)
 
-    const handleSubmit = () => {
+    const [isSubmiting, setSubmiting] = React.useState(false)
 
-        console.log('submitted')
+    const handleSubmit = async (data: IFormData) => {
+        const formatedData: IFormData = normalizeInputValue<IFormData>(data)
+
+        try {
+            setSubmiting(true)
+
+            await signIn(formatedData.email, formatedData.password)
+        } catch (error) {
+            console.log('Error on login')
+        }
+        setSubmiting(false)
     }
 
     const handleOnboarding = React.useCallback(() =>
@@ -35,6 +59,15 @@ const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
     const submitForm = React.useCallback(() =>
         formRef.current?.submitForm()
         , [formRef])
+
+
+    const handleFocus = React.useCallback((inputRef: React.RefObject<{ name: string }>) => {
+        const errors = formRef.current?.getErrors()
+        if (errors) {
+            delete errors[inputRef.current?.name as string]
+            formRef.current?.setErrors(errors as any)
+        }
+    }, [])
 
     return (
         <ScreenContainer>
@@ -47,12 +80,32 @@ const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
                         onSubmit={handleSubmit}
                     >
                         <Input
+                            ref={emailRef}
                             name='email'
                             label="Email"
+                            placeholder='Insira seu email'
+                            autoCorrect={false}
+                            autoCapitalize="none"
+                            returnKeyType="next"
+                            keyboardType='email-address'
+                            maxLength={200}
+                            disabled={isSubmiting}
+                            onFocus={() => handleFocus(emailRef)}
+                            onSubmitEditing={() => passwordRef.current?.focus()}
                         />
-                        <Input
+                        <PasswordInput
+                            ref={passwordRef}
                             name='password'
                             label="Password"
+                            placeholder="Insira sua senha"
+                            autoCorrect={false}
+                            autoCapitalize='none'
+                            returnKeyType="next"
+                            keyboardType='name-phone-pad'
+                            maxLength={20}
+                            disabled={isSubmiting}
+                            onFocus={() => handleFocus(passwordRef)}
+                            onSubmitEditing={submitForm}
                         />
                     </LoginForm>
                     <ButtonWrapper>
