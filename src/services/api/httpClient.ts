@@ -1,3 +1,4 @@
+import { ApiCommomError } from '@/common/validations/apiErrors'
 import axios from 'axios'
 const { API_URL } = process.env
 
@@ -12,17 +13,22 @@ clientHttp.interceptors.response.use(
 
         return Promise.resolve(data)
     },
-    // error => Promise.reject(error)
     error => {
         if (error.isAxiosError) {
             const { response } = error
             const { data } = response
 
-            console.log('Axios error')
-            console.log(JSON.stringify(data))
+            if (data.error_code)
+                return Promise.reject(new ApiCommomError(
+                    data.error,
+                    data.error_code
+                ))
+            else
+                return Promise.reject(`unexpected error: ${JSON.stringify(error)}`)
+
         } else
             console.log(JSON.stringify(error))
-        
+
         return Promise.reject(`unexpected error: ${JSON.stringify(error)}`)
     }
 )

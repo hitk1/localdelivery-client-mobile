@@ -1,5 +1,7 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
+import Toast from 'react-native-toast-message'
+import * as Yup from 'yup'
 import { FormHandles } from '@unform/core'
 import { TextInput } from 'react-native-gesture-handler'
 
@@ -21,6 +23,9 @@ import {
 } from './styles'
 import { normalizeInputValue } from '@/common/utils'
 import { useAuth } from '@/hooks/auth'
+import { ApiCommomError } from '@/common/validations/apiErrors'
+import { loginSchema } from './schema'
+import { getYupValidationErrors } from '@/common/validations/yupValidationError'
 
 interface IFormData {
     email: string
@@ -40,15 +45,46 @@ const SignIn: React.FC<InitialScreenProps> = ({ navigation }) => {
 
     const handleSubmit = async (data: IFormData) => {
         const formatedData: IFormData = normalizeInputValue<IFormData>(data)
-
         try {
+            await loginSchema.validate(formatedData, { abortEarly: false })
+
             setSubmiting(true)
 
             await signIn(formatedData.email, formatedData.password)
         } catch (error) {
-            console.log('Error on login')
+            if (error instanceof Yup.ValidationError) {
+                formRef.current?.setErrors(getYupValidationErrors(error))
+                return
+            }
+
+            if (error instanceof ApiCommomError) {
+                const {
+                    errorCode
+                } = error
+
+                if (errorCode === 'not_found') {
+                    Toast.show({
+                        text1: 'Erro',
+                        text2: 'Usuário não cadastrado',
+                        type: 'info'
+                    })
+
+                    return
+                }
+
+                if (errorCode === 'unauthorized') {
+                    Toast.show({
+                        text1: 'Atenção',
+                        text2: 'Usuário ou senha inválidos',
+                        type: 'info'
+                    })
+
+                    return
+                }
+            }
+        } finally {
+            setSubmiting(false)
         }
-        setSubmiting(false)
     }
 
     const handleOnboarding = React.useCallback(() =>
