@@ -206,7 +206,7 @@ const Address = ({ handlePageChange }: Props) => {
                     maxLength={255}
                     disabled={isSubmiting}
                     onFocus={() => handleFocus(neighborhoodRef)}
-                    onSubmitEditing={() => zipCodeRef.current?.focus()}
+                    onSubmitEditing={() => aliasRef.current?.focus()}
                 />
                 <Input
                     ref={aliasRef}

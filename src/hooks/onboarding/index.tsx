@@ -21,7 +21,10 @@ const OnboardingProvider: React.FC<ProviderProps> = ({ children }) => {
     const [userId, setUserId] = React.useState<string | null>(null)
     const [addressId, setAddressId] = React.useState<string | null>(null)
 
-    const saveUserId = async (userId: string) => await AsyncStorage.setItem('@localdelivery:onboarding:user', userId)
+    const saveUserId = async (userId: string) => {
+        await AsyncStorage.setItem('@localdelivery:onboarding:user', userId)
+        setUserId(userId)
+    }
 
     const getUserId = async () => {
         const result = await AsyncStorage.getItem('@localdelivery:onboarding:user')
